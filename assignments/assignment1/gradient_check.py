@@ -31,6 +31,8 @@ def check_gradient(f, x, delta=1e-5, tol = 1e-4):
     while not it.finished:
         ix = it.multi_index
         analytic_grad_at_ix = analytic_grad[ix]
+        print([ix])
+        print(f)
         numeric_grad_at_ix = 0
 
         # TODO compute value of numeric gradient of f to idx
