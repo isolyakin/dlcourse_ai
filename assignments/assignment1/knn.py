@@ -9,7 +9,7 @@ class KNN:
         self.k = k
 
     def fit(self, X, y):
-        self.train_X = X
+        self.train_X = X 
         self.train_y = y
 
     def predict(self, X, num_loops=0):
@@ -55,7 +55,9 @@ class KNN:
         for i_test in range(num_test):
             for i_train in range(num_train):
                 # TODO: Fill dists[i_test][i_train]
-                pass
+                #pass
+                dists[i_test, i_train] = np.abs(X[i_test,:] - self.train_X[i_train, :]).sum()
+        return dists
 
     def compute_distances_one_loop(self, X):
         '''
@@ -75,7 +77,9 @@ class KNN:
         for i_test in range(num_test):
             # TODO: Fill the whole row of dists[i_test]
             # without additional loops or list comprehensions
-            pass
+            #pass
+            dists[i_test,:] = np.abs(X[i_test,:] - self.train_X).sum(1)
+        return dists
 
     def compute_distances_no_loops(self, X):
         '''
@@ -94,7 +98,12 @@ class KNN:
         # Using float32 to to save memory - the default is float64
         dists = np.zeros((num_test, num_train), np.float32)
         # TODO: Implement computing all distances with no loops!
-        pass
+        Y = np.transpose(self.train_X)
+        A_ = np.repeat(np.reshape(X, (num_test, X.shape[1], 1)), num_train, axis=2)
+        B_ = np.repeat(np.reshape(Y, (1, Y.shape[0], num_train)), num_test, axis=0)
+        dists = np.abs(A_ - B_).sum(axis=1)
+        return dists
+        #pass
 
     def predict_labels_binary(self, dists):
         '''
@@ -110,10 +119,13 @@ class KNN:
         '''
         num_test = dists.shape[0]
         pred = np.zeros(num_test, np.bool)
+        
         for i in range(num_test):
             # TODO: Implement choosing best class based on k
             # nearest training samples
-            pass
+            unique, counts = np.unique((self.train_y[dists[i, :].argsort()[:self.k]]), return_counts=True)
+            pred[i] = unique[np.argmax(counts)]
+            #pass
         return pred
 
     def predict_labels_multiclass(self, dists):
@@ -129,10 +141,10 @@ class KNN:
            for every test sample
         '''
         num_test = dists.shape[0]
-        num_test = dists.shape[0]
-        pred = np.zeros(num_test, np.int)
+        pred = np.zeros(num_test, np.bool)
         for i in range(num_test):
             # TODO: Implement choosing best class based on k
             # nearest training samples
-            pass
+            unique, counts = np.unique((self.train_y[dists[i, :].argsort()[:self.k]]), return_counts=True)
+            pred[i] = unique[np.argmax(counts)]
         return pred
