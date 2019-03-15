@@ -31,11 +31,19 @@ def check_gradient(f, x, delta=1e-5, tol = 1e-4):
     while not it.finished:
         ix = it.multi_index
         analytic_grad_at_ix = analytic_grad[ix]
-        numeric_grad_at_ix = 0
+        numeric_grad_at_ix = np.zeros_like(x)
 
         # TODO compute value of numeric gradient of f to idx
         print(f, x[ix])
-        numeric_grad_at_ix_pls, _ = f(x[ix] + delta)
+        oldval = x[ix]
+        x[ix] = oldval + delta
+        pos, _ = f(x)
+        x[ix] = oldval - delta
+        neg, _ = f(x)
+        x[ix] = oldval
+        numeric_grad_at_ix[ix] = np.sum((pos - neg)) / (2 * delta)
+        print(pos, neg, numeric_grad_at_ix[ix], ix)
+        #numeric_grad_at_ix_pls, _ = f(x[ix] + delta)
         #numeric_grad_at_ix_mns, _ = f(x[ix] - delta)
         #numeric_grad_at_ix  = (numeric_grad_at_ix_pls - numeric_grad_at_ix_mns) / (2 * delta)
         
