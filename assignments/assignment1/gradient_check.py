@@ -34,7 +34,7 @@ def check_gradient(f, x, delta=1e-5, tol = 1e-4):
         numeric_grad_at_ix = 0
 
         # TODO compute value of numeric gradient of f to idx
-        print(x[ix])
+        print(f, x[ix])
         numeric_grad_at_ix_pls, _ = f(x[ix] + delta)
         #numeric_grad_at_ix_mns, _ = f(x[ix] - delta)
         #numeric_grad_at_ix  = (numeric_grad_at_ix_pls - numeric_grad_at_ix_mns) / (2 * delta)
@@ -42,7 +42,7 @@ def check_gradient(f, x, delta=1e-5, tol = 1e-4):
         if not np.isclose(numeric_grad_at_ix, analytic_grad_at_ix, tol):
             print("Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (ix, analytic_grad_at_ix, numeric_grad_at_ix))
             #print("Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (x[ix], ix, analytic_grad_at_ix, numeric_grad_at_ix))
-            #return False
+            return False
 
         it.iternext()
 
